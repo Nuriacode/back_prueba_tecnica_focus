@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  server:
+    container_name: "back_PT"
+    build:
+      context: .
+    volumes:
+      - ".:/server"
+    ports:
+      - 3001:3001
+    command: npm run start-dev
+    tty: true
