@@ -2,6 +2,8 @@ const express = require("express");
 const {
   createUser,
   CreateUserException,
+  loginByEmail,
+  LoginByEmailException,
 } = require("../controllers/userController");
 const usersRouter = express.Router();
 
@@ -13,20 +15,16 @@ usersRouter.post("/", async (request, response) => {
 
   let response_user = null;
   let response_result = null;
-  console.log(
-    "---->route!!!!name, phone, email, password",
-    request.body,
-    "<-------"
-  );
+
   if (!name || !email || !password) {
     response_result = CreateUserException.incorrectParameters;
   } else {
     try {
       response_user = await createUser(name, phone, email, password);
-      console.log(response_user, "risponse user routesssSS");
+
       response_result = CreateUserException.success;
     } catch (error) {
-      console.log(error.code);
+      console.log("errorrrr", error);
       if (error.code != null) {
         response_result = error.code;
       } else {
@@ -35,6 +33,34 @@ usersRouter.post("/", async (request, response) => {
     }
   }
 
+  response.json({
+    user: response_user,
+    result: response_result,
+  });
+});
+
+usersRouter.post("/login", async (request, response) => {
+  let email = request.body.email;
+  let password = request.body.password;
+
+  let response_user = null;
+  let response_result = null;
+  if (email == null || password == null) {
+    response_result = LoginByEmailException.incorrectParameters;
+  } else {
+    try {
+      response_user = await loginByEmail(email, password);
+
+      response_result = LoginByEmailException.success;
+    } catch (error) {
+      console.log(error.message);
+      if (error.code != null) {
+        response_result = error.code;
+      } else {
+        response_result = LoginByEmailException.unknownError;
+      }
+    }
+  }
   response.json({
     user: response_user,
     result: response_result,

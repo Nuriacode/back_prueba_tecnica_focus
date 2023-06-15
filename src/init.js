@@ -1,12 +1,11 @@
 const express = require("express");
 const app = express();
 const router = require("./routers");
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(router);
 
-// app.get("/", function (req, res) {
-//   res.send("Hello World");
-// });
-
-app.listen(3001);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

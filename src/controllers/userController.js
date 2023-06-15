@@ -1,15 +1,10 @@
 const databaseConection = require("../db");
 const HandleError = require("./handleError");
+const Security = require("../services/securityProvider");
+const security = new Security();
+const CryptoJS = require("crypto-js");
 
 async function createUser(name, phone, email, password) {
-  console.log(
-    "---->CONTROLERname, phone, email, password",
-    name,
-    phone,
-    email,
-    password,
-    "<-------"
-  );
   const db = await databaseConection.GetConection();
 
   const doesEmailExist = await db.collection("Users").findOne({
@@ -20,16 +15,46 @@ async function createUser(name, phone, email, password) {
     throw new CreateUserException(CreateUserException.emailAlreadyInUser);
   }
 
-  let newUser = {
+  const newUser = {
     name: name,
     phone: phone,
     email: email,
-    password: password,
+    password: security.encryptData(password),
   };
 
   const createdUser = await db.collection("Users").insertOne(newUser);
 
-  return createdUser.ops[0];
+  return createdUser;
+}
+
+async function loginByEmail(email, password) {
+  let db = await databaseConection.GetConection();
+
+  const user = await db.collection("Users").findOne({
+    email: email,
+  });
+  if (user == null) {
+    throw new LoginByEmailException(LoginByEmailException.errorIncorrectEmail);
+  }
+  const bytes = security.decryptData(user.password);
+  const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+  if (originalText != password) {
+    throw new LoginByEmailException(
+      LoginByEmailException.errorIncorrectPassword
+    );
+  }
+
+  return user;
+}
+
+class LoginByEmailException extends HandleError {
+  static errorIncorrectPassword = "INCORRECT_PASSWORD";
+  static errorIncorrectEmail = "UNKNOWN_EMAIL";
+  //Por seguridad es correcto?
+  constructor(code) {
+    super("Login By Email", code);
+  }
 }
 
 class CreateUserException extends HandleError {
@@ -41,6 +66,8 @@ class CreateUserException extends HandleError {
 }
 
 module.exports = {
-  createUser: createUser,
-  CreateUserException: CreateUserException,
+  createUser,
+  loginByEmail,
+  LoginByEmailException,
+  CreateUserException,
 };
