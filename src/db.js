@@ -48,25 +48,7 @@ var DbConnection = function () {
     }
   }
 
-  async function ConnectToOld() {
-    try {
-      if (client != null) {
-        return client.db("apache");
-      } else {
-        client = await DbConnect();
-
-        return client.db("apache");
-      }
-    } catch (e) {
-      return e;
-    }
-  }
-
-  return {
-    GetConection: Get,
-    GetClient: GetClient,
-    ConnectToOld: ConnectToOld,
-  };
+  return { GetConection: Get, GetClient: GetClient };
 };
 
 module.exports = DbConnection();
