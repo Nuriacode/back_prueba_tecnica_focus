@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dbConnect = () => {
 
   const user = "nuria_2";
-  const pass = "a31HQT0rq1Z3rLb3";
+  const pass = "LBUBtw0JjjnGiIXC";
   const dbName = "random_users";
   const uri=  `mongodb+srv://nuria_2:${pass}@atlascluster.r4mghn8.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 

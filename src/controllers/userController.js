@@ -16,8 +16,8 @@ async function createUser(name, phone, email, password) {
   }
 
   const newUser = {
-    name: name,
-    phone: phone,
+    // name: name,
+    // phone: phone,
     email: email,
     password: security.encryptData(password),
   };
