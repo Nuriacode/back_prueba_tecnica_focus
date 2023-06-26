@@ -19,6 +19,18 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+const Users = require('../src/models/userModel');
+app.post('/login/:id', (req, res) => {
+  const { id } = req.params;
+  const query = Users.findOne({ _id: id })
+  .then((doc) => {
+    res.json(doc);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+});
+
 const NewUser = require('../src/models/customersModel');
 app.post('/createCustomer', (req, res) => {
   console.log(req.body);
@@ -26,7 +38,7 @@ app.post('/createCustomer', (req, res) => {
   });
 });
 
- const Person = require('../src/models/customersModel');
+const Person = require('../src/models/customersModel');
 
 app.get('/allCustomers', (req, res) => {
   const query = Person.find()
