@@ -7,8 +7,6 @@ const dbConnect = () => {
   const dbName = "random_users";
   const uri=  `mongodb+srv://nuria_2:${pass}@atlascluster.r4mghn8.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
-
-
   mongoose
     .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("conectado a mongodb"))

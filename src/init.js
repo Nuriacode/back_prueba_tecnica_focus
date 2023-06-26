@@ -19,7 +19,6 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-
 const NewUser = require('../src/models/customersModel');
 app.post('/createCustomer', (req, res) => {
   console.log(req.body);
@@ -27,4 +26,30 @@ app.post('/createCustomer', (req, res) => {
   });
 });
 
+ const Person = require('../src/models/customersModel');
 
+app.get('/allCustomers', (req, res) => {
+  const query = Person.find()
+  .then(results=>{
+    console.log("exito")
+  })
+  .catch(error => {
+    console.log("no exito")
+    console.log(error)
+  })
+});
+
+// modificar algun cliente de la base de datos.
+// app.put('/updateCutomer' , (req, res) => {
+//   Person.findOneAndUpdate(
+
+//   )
+// })
+
+// borrar algun cliente de la base de datos.
+// app.delete('/updateCutomer' , (req, res) => {
+//   Person.deleteOne(
+//   )
+//   Person.deleteMany(
+//   )
+// })
